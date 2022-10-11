@@ -1,11 +1,28 @@
-version: 'X'
+version: '3'
 services:
-  app_A:
-    # ...
-    # parâmetros
-    # ...
-  app_B:
-    # ...
-    # parâmetros
-    # ...
-  # ...
+
+  todofront:
+    image: todofrontend:latest
+    depends_on:
+      - todoback
+    ports: 
+      - 3000:3000
+    restart: on-failure
+    environment:
+      - REACT_APP_API_HOST: todoback
+
+  todoback:
+    image: todobackend:latest
+    ports: 
+      - 3001:3001
+    restart: on-failure
+
+  todotests:
+    image: todotests:latest
+    depends_on: 
+      - todofront
+      - todoback
+    environment:
+      - FRONT_HOST: todofront
+    restart: on-failure
+ 
